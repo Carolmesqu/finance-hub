@@ -47,8 +47,7 @@
 
 ## Sprint 8
 
-- [x] Relatórios
-
+- [x] Relatório
 ---
 
 ## Sprint 9

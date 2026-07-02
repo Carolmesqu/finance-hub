@@ -5,7 +5,7 @@ import { createSummaryCard } from "../components/SummaryCard.js";
 import { createMonthSelector } from "../components/MonthSelector.js";
 import { createMonthlyChart } from "../components/MonthlyChart.js";
 import { createTransactionRow } from "../components/TransactionRow.js";
-import { createButton } from "../components/Button.js";
+import { createButton, setButtonLoading } from "../components/Button.js";
 import { showToast } from "../components/Toast.js";
 import { getState } from "../state/store.js";
 import { getDashboardSummary } from "../services/dashboardService.js";
@@ -45,12 +45,18 @@ export function renderDashboardPage() {
 
   const refresh = () => loadSummary(currentMonth, currentYear);
 
+  let isActionLoading = false;
+
   const toolbarActions = createElement("div", { className: "dashboard__toolbar-actions" }, [
     createButton({
       label: "+ Receita",
       variant: "primary",
       size: "sm",
-      onClick: async () => {
+      onClick: async (event) => {
+        if (isActionLoading) return;
+        isActionLoading = true;
+        const btn = event.currentTarget;
+        setButtonLoading(btn, true);
         try {
           const [accounts, categories] = await Promise.all([
             listAccounts(),
@@ -64,6 +70,9 @@ export function renderDashboardPage() {
           });
         } catch (error) {
           showToast({ message: "Erro ao carregar dados para receita.", type: "error" });
+        } finally {
+          setButtonLoading(btn, false);
+          isActionLoading = false;
         }
       },
     }),
@@ -71,7 +80,11 @@ export function renderDashboardPage() {
       label: "+ Despesa",
       variant: "danger",
       size: "sm",
-      onClick: async () => {
+      onClick: async (event) => {
+        if (isActionLoading) return;
+        isActionLoading = true;
+        const btn = event.currentTarget;
+        setButtonLoading(btn, true);
         try {
           const [accounts, categories, cards] = await Promise.all([
             listAccounts(),
@@ -88,6 +101,9 @@ export function renderDashboardPage() {
           });
         } catch (error) {
           showToast({ message: "Erro ao carregar dados para despesa.", type: "error" });
+        } finally {
+          setButtonLoading(btn, false);
+          isActionLoading = false;
         }
       },
     }),
@@ -95,7 +111,25 @@ export function renderDashboardPage() {
       label: "+ Transferência",
       variant: "secondary",
       size: "sm",
-      onClick: () => openTransferFormModal({ onSaved: refresh }),
+      onClick: async (event) => {
+        if (isActionLoading) return;
+        isActionLoading = true;
+        const btn = event.currentTarget;
+        setButtonLoading(btn, true);
+        try {
+          const accounts = await listAccounts();
+          if (accounts.length < 2) {
+            showToast({ message: "Cadastre pelo menos duas contas antes de realizar transferências.", type: "error" });
+            return;
+          }
+          await openTransferFormModal({ onSaved: refresh, preloadedAccounts: accounts });
+        } catch (error) {
+          showToast({ message: "Erro ao carregar contas para transferência.", type: "error" });
+        } finally {
+          setButtonLoading(btn, false);
+          isActionLoading = false;
+        }
+      },
     }),
   ]);
 

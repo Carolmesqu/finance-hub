@@ -13,8 +13,8 @@ import { todayDateInputValue } from "../utils/format.js";
  *
  * @param {{ onSaved?: () => void }} options
  */
-export async function openTransferFormModal({ onSaved } = {}) {
-  let accounts = [];
+export async function openTransferFormModal({ onSaved, preloadedAccounts } = {}) {
+  let accounts = preloadedAccounts;
 
   const amountInput = createInput({ label: "Valor*", type: "number", placeholder: "0,00" });
   const dateInput = createInput({ label: "Data*", type: "date", value: todayDateInputValue() });
@@ -43,26 +43,31 @@ export async function openTransferFormModal({ onSaved } = {}) {
 
   openModal({ title: "Nova Transferência", content: form });
 
-  try {
-    accounts = await listAccounts();
-    if (accounts.length < 2) {
-      showToast({ message: "Cadastre pelo menos duas contas antes de realizar transferências.", type: "error" });
-      closeModal();
-      return;
-    }
-
-    accounts.forEach((acc) => {
+  const populate = (accs) => {
+    accs.forEach((acc) => {
       fromAccountSelect.select.appendChild(createElement("option", { attrs: { value: acc.id }, text: acc.name }));
       toAccountSelect.select.appendChild(createElement("option", { attrs: { value: acc.id }, text: acc.name }));
     });
-
-    // Pré-selecionar a segunda conta como destino por conveniência
     if (toAccountSelect.select.options.length > 1) {
       toAccountSelect.select.selectedIndex = 1;
     }
-  } catch (error) {
-    showToast({ message: error.message || "Erro ao carregar contas.", type: "error" });
-    closeModal();
+  };
+
+  if (accounts) {
+    populate(accounts);
+  } else {
+    try {
+      accounts = await listAccounts();
+      if (accounts.length < 2) {
+        showToast({ message: "Cadastre pelo menos duas contas antes de realizar transferências.", type: "error" });
+        closeModal();
+        return;
+      }
+      populate(accounts);
+    } catch (error) {
+      showToast({ message: error.message || "Erro ao carregar contas.", type: "error" });
+      closeModal();
+    }
   }
 
   async function handleSubmit() {

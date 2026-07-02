@@ -76,7 +76,7 @@ export function renderReportsPage() {
       label: "Gerar Relatório",
       variant: "primary",
       onClick: fetchReport,
-    }).element,
+    }),
   ]);
 
   const searchSection = createElement("div", { className: "reports-page__search-row" }, [
@@ -112,7 +112,7 @@ export function renderReportsPage() {
     createElement("div", { className: "reports-page__body" }, [
       createElement("div", { className: "reports-page__title-row" }, [
         createElement("h1", { className: "reports-page__title", text: "Relatórios Financeiros" }),
-        createElement("div", { className: "reports-page__actions" }, [pdfButton.element, excelButton.element]),
+        createElement("div", { className: "reports-page__actions" }, [pdfButton, excelButton]),
       ]),
       filterSection,
       contentEl,
