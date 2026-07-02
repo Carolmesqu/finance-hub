@@ -1,0 +1,59 @@
+.monthly-chart {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.monthly-chart__legend {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.monthly-chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-caption-size);
+  color: var(--color-text-secondary);
+}
+
+.monthly-chart__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+}
+
+.monthly-chart__dot--income {
+  background-color: var(--color-income);
+}
+
+.monthly-chart__dot--expense {
+  background-color: var(--color-expense);
+}
+
+.monthly-chart__svg {
+  width: 100%;
+  height: auto;
+}
+
+.monthly-chart__bar--income {
+  fill: var(--color-income);
+}
+
+.monthly-chart__bar--expense {
+  fill: var(--color-expense);
+}
+
+.monthly-chart__month-label {
+  font-size: 10px;
+  fill: var(--color-text-secondary);
+}
+
+.monthly-chart__empty {
+  color: var(--color-text-secondary);
+  font-size: var(--font-body-size);
+  text-align: center;
+  padding: var(--space-5) 0;
+}

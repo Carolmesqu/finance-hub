@@ -1,0 +1,99 @@
+/*
+  Design tokens — fonte de verdade visual do FinanceHub.
+  Especificação completa em docs/UI_GUIDELINES.md.
+  Nenhuma cor/medida deve ser escrita "hardcoded" em componentes: sempre via var(--token).
+*/
+
+:root {
+  /* Cores de marca */
+  --color-brand-50: #EEF2FF;
+  --color-brand-100: #C7D2FE;
+  --color-brand-500: #6366F1;
+  --color-brand-600: #4F46E5;
+  --color-brand-700: #4338CA;
+
+  /* Cores semânticas */
+  --color-income: #16A34A;
+  --color-expense: #DC2626;
+  --color-warning: #D97706;
+  --color-info: #0EA5E9;
+
+  /* Tipografia */
+  --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --font-display-size: 32px;
+  --font-display-line: 40px;
+  --font-h1-size: 24px;
+  --font-h1-line: 32px;
+  --font-h2-size: 20px;
+  --font-h2-line: 28px;
+  --font-h3-size: 16px;
+  --font-h3-line: 24px;
+  --font-body-size: 14px;
+  --font-body-line: 20px;
+  --font-caption-size: 12px;
+  --font-caption-line: 16px;
+
+  /* Espaçamento (múltiplos de 4px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+
+  /* Raio de borda */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+
+  /* Elevação */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.16);
+
+  /* Ícones */
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+
+  /* Movimento */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-decelerate: cubic-bezier(0, 0, 0, 1);
+  --easing-accelerate: cubic-bezier(0.3, 0, 1, 1);
+
+  /* Breakpoints (uso documental — media queries usam o valor literal) */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+}
+
+[data-theme="light"] {
+  --color-bg: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F1F2F6;
+  --color-border: #E5E7EB;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-disabled: #9CA3AF;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0B0D12;
+  --color-surface: #161922;
+  --color-surface-alt: #1E222D;
+  --color-border: #2A2E3A;
+  --color-text-primary: #F3F4F6;
+  --color-text-secondary: #9CA3AF;
+  --color-text-disabled: #6B7280;
+}

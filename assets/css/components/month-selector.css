@@ -1,0 +1,33 @@
+.month-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+}
+
+.month-selector__label {
+  min-width: 160px;
+  text-align: center;
+  font-weight: 600;
+  font-size: var(--font-h3-size);
+  color: var(--color-text-primary);
+}
+
+.month-selector__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.month-selector__button:hover {
+  background-color: var(--color-surface-alt);
+}

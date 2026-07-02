@@ -1,0 +1,33 @@
+/*
+  Ponto de entrada único de estilos, referenciado pelo index.html.
+  Ao adicionar um novo componente/página, incluir seu @import aqui.
+*/
+
+@import "./tokens.css";
+@import "./reset.css";
+@import "./animations.css";
+
+@import "./components/button.css";
+@import "./components/spinner.css";
+@import "./components/toast.css";
+@import "./components/modal.css";
+@import "./components/dialog.css";
+@import "./components/input.css";
+@import "./components/badge.css";
+@import "./components/app-header.css";
+@import "./components/workspace-card.css";
+@import "./components/member-row.css";
+@import "./components/summary-card.css";
+@import "./components/month-selector.css";
+@import "./components/monthly-chart.css";
+@import "./components/transaction-row.css";
+@import "./components/switch.css";
+@import "./components/offline-banner.css";
+
+@import "./pages/login.css";
+@import "./pages/workspaces.css";
+@import "./pages/workspace-home.css";
+@import "./pages/dashboard.css";
+@import "./pages/transaction-list.css";
+@import "./pages/cards.css";
+@import "./pages/reports.css";

@@ -1,0 +1,37 @@
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.summary-card__label {
+  font-size: var(--font-caption-size);
+  color: var(--color-text-secondary);
+}
+
+.summary-card__value {
+  font-size: var(--font-h1-size);
+  line-height: var(--font-h1-line);
+  color: var(--color-text-primary);
+}
+
+.summary-card__value--income {
+  color: var(--color-income);
+}
+
+.summary-card__value--expense {
+  color: var(--color-expense);
+}
+
+.summary-card__value--brand {
+  color: var(--color-brand-600);
+}
+
+.summary-card__hint {
+  font-size: var(--font-caption-size);
+  color: var(--color-text-secondary);
+}

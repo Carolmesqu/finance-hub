@@ -1,0 +1,93 @@
+.workspaces-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.workspaces-page__body {
+  flex: 1;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.workspaces-page__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.workspaces-page__title {
+  font-size: var(--font-h1-size);
+  line-height: var(--font-h1-line);
+}
+
+.workspaces-page__subtitle {
+  font-size: var(--font-h3-size);
+  margin-bottom: var(--space-2);
+}
+
+.workspaces-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.workspaces-page__empty {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+
+.workspaces-page__invites {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+/* Reutilizado também em WorkspaceHomePage (convites pendentes do Workspace) */
+.invite-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.invite-row:last-child {
+  border-bottom: none;
+}
+
+.invite-row__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-row__workspace {
+  font-weight: 600;
+}
+
+.invite-row__role {
+  font-size: var(--font-caption-size);
+  color: var(--color-text-secondary);
+}
+
+.invite-row__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Reutilizado também no modal de Convidar Membro (WorkspaceHomePage) */
+.workspace-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

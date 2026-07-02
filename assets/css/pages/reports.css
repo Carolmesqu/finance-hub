@@ -1,0 +1,252 @@
+/* Estilos da Página de Relatórios */
+.reports-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.reports-page__body {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.reports-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.reports-page__title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.reports-page__title {
+  font-size: var(--font-h1-size);
+  font-weight: 700;
+}
+
+.reports-page__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Filtros */
+.reports-page__filters {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+  .reports-page__filters {
+    grid-template-columns: repeat(4, 1fr);
+    align-items: end;
+  }
+}
+
+.reports-page__tabs {
+  display: flex;
+  background-color: var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.reports-page__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.reports-page__tab-btn {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-body-size);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+}
+
+.reports-page__tab-btn:hover {
+  color: var(--color-text-primary);
+}
+
+.reports-page__tab-btn--active {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Indicadores */
+.reports-page__summary-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .reports-page__summary-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Seções de Gráfico / Listas */
+.reports-page__card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.reports-page__card-title {
+  font-size: var(--font-h2-size);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
+}
+
+/* Barras de progresso premium para categorias e cartões */
+.progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.progress-item__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-body-size);
+}
+
+.progress-item__name {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.progress-item__value {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.progress-item__bar-wrapper {
+  height: 8px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-item__bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-500);
+  transition: width 0.5s ease-out;
+}
+
+/* Variações de cor para categorias */
+.progress-item:nth-child(5n+1) .progress-item__bar { background-color: var(--color-brand-500); }
+.progress-item:nth-child(5n+2) .progress-item__bar { background-color: #10b981; }
+.progress-item:nth-child(5n+3) .progress-item__bar { background-color: #f59e0b; }
+.progress-item:nth-child(5n+4) .progress-item__bar { background-color: #ef4444; }
+.progress-item:nth-child(5n+5) .progress-item__bar { background-color: #8b5cf6; }
+
+/* Comparativo de Período */
+.comparative-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .comparative-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.comparative-card {
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.comparative-card__title {
+  font-size: var(--font-caption-size);
+  color: var(--color-text-secondary);
+}
+
+.comparative-card__values {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.comparative-card__current {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.comparative-card__indicator {
+  font-size: var(--font-caption-size);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.comparative-card__indicator--up {
+  color: var(--color-expense);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.comparative-card__indicator--down {
+  color: var(--color-income);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* Transações */
+.reports-page__search-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .reports-page__search-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
