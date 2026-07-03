@@ -2,7 +2,7 @@ import { createElement } from "../utils/dom.js";
 import { createButton } from "./Button.js";
 import { showToast } from "./Toast.js";
 import { logout } from "../services/authService.js";
-import { getState, setUser, setWorkspace } from "../state/store.js";
+import { getState, setUser, setWorkspace, subscribe, setDeferredInstallPrompt } from "../state/store.js";
 import { navigate } from "../router/router.js";
 
 /**
@@ -25,7 +25,34 @@ export function createAppHeader({
 } = {}) {
   const { user } = getState();
 
-  const actions = [];
+  const installBtnContainer = createElement("div", { className: "app-header__install-container" });
+
+  const updateInstallButton = (currentState) => {
+    installBtnContainer.replaceChildren();
+    if (currentState.deferredInstallPrompt) {
+      const installButton = createButton({
+        label: "Instalar App",
+        variant: "primary",
+        size: "sm",
+        onClick: async () => {
+          const promptEvent = currentState.deferredInstallPrompt;
+          if (!promptEvent) return;
+          promptEvent.prompt();
+          const { outcome } = await promptEvent.userChoice;
+          console.log(`PWA install outcome: ${outcome}`);
+          setDeferredInstallPrompt(null);
+        },
+      });
+      const downloadIcon = createElement("span", { className: "btn__icon", text: "📲" });
+      installButton.prepend(downloadIcon);
+      installBtnContainer.appendChild(installButton);
+    }
+  };
+
+  subscribe(updateInstallButton);
+  updateInstallButton(getState());
+
+  const actions = [installBtnContainer];
 
   if (showDashboardLink) {
     actions.push(

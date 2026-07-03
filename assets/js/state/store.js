@@ -14,6 +14,7 @@ const state = {
   workspace: null,
   theme: "system",
   currentPage: null,
+  deferredInstallPrompt: null,
 };
 
 const listeners = new Set();
@@ -49,6 +50,11 @@ export function setWorkspace(workspace) {
 
 export function setCurrentPage(page) {
   state.currentPage = page;
+  notify();
+}
+
+export function setDeferredInstallPrompt(prompt) {
+  state.deferredInstallPrompt = prompt;
   notify();
 }
 

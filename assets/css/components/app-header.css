@@ -48,6 +48,10 @@
   font-size: var(--font-caption-size);
 }
 
+.app-header__install-container {
+  display: inline-flex;
+}
+
 @media (max-width: 767px) {
   .app-header {
     display: grid;

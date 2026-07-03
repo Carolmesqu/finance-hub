@@ -12,7 +12,7 @@
 import { initRouter } from "./router/router.js";
 import { routes } from "./router/routes.js";
 import { observeAuthState } from "./services/authService.js";
-import { setUser, applyStoredTheme } from "./state/store.js";
+import { setUser, applyStoredTheme, setDeferredInstallPrompt } from "./state/store.js";
 import { createSpinner } from "./components/Spinner.js";
 import { createElement } from "./utils/dom.js";
 
@@ -20,6 +20,18 @@ applyStoredTheme();
 
 const appRoot = document.getElementById("app");
 renderBootScreen(appRoot);
+
+// Captura prompt de instalação PWA
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  setDeferredInstallPrompt(e);
+});
+
+// Detecta quando o App é instalado com sucesso
+window.addEventListener("appinstalled", () => {
+  setDeferredInstallPrompt(null);
+  console.log("PWA instalado com sucesso!");
+});
 
 let routerStarted = false;
 
