@@ -19,6 +19,12 @@
   color: var(--color-text-primary);
 }
 
+@media (max-width: 767px) {
+  .summary-card__value {
+    font-size: var(--font-h2-size);
+  }
+}
+
 .summary-card__value--income {
   color: var(--color-income);
 }

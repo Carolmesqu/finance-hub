@@ -67,7 +67,7 @@ export function renderTransactionListPage({
   const endDateInput = createInput({ label: "Até", type: "date" });
   const filterButton = createButton({ label: "Filtrar", variant: "secondary", onClick: applyFilters });
 
-  const filterButtonWrapper = createElement("div", { className: "input" }, [
+  const filterButtonWrapper = createElement("div", { className: "input input--filter-btn" }, [
     createElement("label", { className: "input__label", text: "\u00A0" }),
     filterButton,
     createElement("span", { className: "input__error" }),

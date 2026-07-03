@@ -80,6 +80,12 @@
   }
 }
 
+@media (max-width: 767px) {
+  .input--filter-btn .input__label {
+    display: none;
+  }
+}
+
 .expense-form__installment-preview {
   font-size: var(--font-caption-size);
   color: var(--color-brand-500);

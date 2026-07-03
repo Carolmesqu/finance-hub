@@ -71,6 +71,7 @@ function getActionHandlers_() {
 }
 
 function doPost(e) {
+  clearCache_();
   var response;
 
   try {

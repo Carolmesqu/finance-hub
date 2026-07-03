@@ -131,10 +131,8 @@ export function createAppHeader({
     createElement("div", { className: "app-header__brand" }, [
       createElement("span", { className: "app-header__title", text: title }),
     ]),
-    createElement("div", { className: "app-header__user" }, [
-      createAvatar(user),
-      createElement("div", { className: "app-header__actions" }, actions),
-    ]),
+    createElement("div", { className: "app-header__nav" }, actions),
+    createAvatar(user),
   ]);
 }
 
