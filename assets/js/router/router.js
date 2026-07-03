@@ -1,9 +1,9 @@
 /**
  * Router SPA (PROJECT.md § Router).
  *
- * Toda a navegação ocorre dentro do mesmo index.html via History API — nunca
- * múltiplos arquivos HTML. Aplica a guarda de autenticação em toda troca de
- * rota (nunca confiar apenas na checagem feita no momento do login).
+ * Toda a navegação ocorre dentro do mesmo index.html via Hash Routing —
+ * isso evita erros 404 ao atualizar a página (F5) em servidores estáticos.
+ * Aplica a guarda de autenticação em toda troca de rota.
  */
 
 import { getState, setCurrentPage } from "../state/store.js";
@@ -29,24 +29,31 @@ export function initRouter(routes, options = {}) {
   routeTable.push(...routes);
 
   document.addEventListener("click", handleLinkClick);
-  window.addEventListener("popstate", renderCurrentRoute);
+  window.addEventListener("hashchange", renderCurrentRoute);
 
-  renderCurrentRoute();
+  // Se não houver hash inicial, define #/ para iniciar a navegação
+  if (!window.location.hash) {
+    window.location.hash = "#/";
+  } else {
+    renderCurrentRoute();
+  }
 }
 
 export function navigate(path, { replace = false } = {}) {
-  if (window.location.pathname === path) {
+  const targetHash = "#" + path;
+  if (window.location.hash === targetHash) {
     renderCurrentRoute();
     return;
   }
 
   if (replace) {
-    window.history.replaceState({}, "", path);
+    const url = new URL(window.location.href);
+    url.hash = targetHash;
+    window.history.replaceState({}, "", url.href);
+    renderCurrentRoute();
   } else {
-    window.history.pushState({}, "", path);
+    window.location.hash = targetHash;
   }
-
-  renderCurrentRoute();
 }
 
 function handleLinkClick(event) {
@@ -70,23 +77,28 @@ function findRoute(pathname) {
 
 function renderCurrentRoute() {
   const { user, workspace } = getState();
-  const pathname = window.location.pathname || "/";
+  const hash = window.location.hash || "#/";
+  const pathname = hash.replace(/^#/, "") || "/";
   let route = findRoute(pathname);
 
   if (!route) {
     route = findRoute(user ? fallbackAuthenticatedPath : fallbackPublicPath);
-    window.history.replaceState({}, "", route.path);
+    const targetHash = "#" + route.path;
+    window.history.replaceState({}, "", targetHash);
   }
 
   if (route.protected && !user) {
     route = findRoute(fallbackPublicPath);
-    window.history.replaceState({}, "", route.path);
+    const targetHash = "#" + route.path;
+    window.history.replaceState({}, "", targetHash);
   } else if (!route.protected && route.path === fallbackPublicPath && user) {
     route = findRoute(fallbackAuthenticatedPath);
-    window.history.replaceState({}, "", route.path);
+    const targetHash = "#" + route.path;
+    window.history.replaceState({}, "", targetHash);
   } else if (route.requiresWorkspace && !workspace) {
     route = findRoute(fallbackAuthenticatedPath);
-    window.history.replaceState({}, "", route.path);
+    const targetHash = "#" + route.path;
+    window.history.replaceState({}, "", targetHash);
   }
 
   setCurrentPage(route.path);
