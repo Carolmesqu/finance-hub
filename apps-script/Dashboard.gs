@@ -79,38 +79,20 @@ function computeCardsSummary_(workspaceId, monthTransactions, year, month) {
   });
 
   return cards.map(function (card) {
-    var closingDay = Number(card.closingDay);
     var dueDay = Number(card.dueDay);
-
-    var periodStart, periodEnd;
-
-    if (dueDay > closingDay) {
-      // Ex.: Fechamento 10, Vencimento 20. Fatura com vencimento em Julho/2026.
-      // Fecha em 10/07/2026. Começa em 11/06/2026.
-      var prev = shiftMonth_(year, month, -1);
-      periodStart = addDays_(buildDateString_(prev.year, prev.month, closingDay), 1);
-      periodEnd = buildDateString_(year, month, closingDay);
-    } else {
-      // Ex.: Fechamento 25, Vencimento 5. Fatura com vencimento em Julho/2026.
-      // Fecha em 25/06/2026 (mês anterior ao vencimento). Começa em 26/05/2026.
-      var prev = shiftMonth_(year, month, -1);
-      var prevPrev = shiftMonth_(year, month, -2);
-      periodStart = addDays_(buildDateString_(prevPrev.year, prevPrev.month, closingDay), 1);
-      periodEnd = buildDateString_(prev.year, prev.month, closingDay);
-    }
+    var period = getInvoicePeriodForDueMonth_(dueDay, year, month);
 
     var invoiceTransactions = allCardTransactions.filter(function (tx) {
-      return tx.cardId === card.id && String(tx.date) >= periodStart && String(tx.date) <= periodEnd;
+      return tx.cardId === card.id && String(tx.date) >= period.start && String(tx.date) <= period.end;
     });
 
     var invoiceTotal = sumAmountList_(invoiceTransactions);
-    var dueDate = monthKey_(year, month) + "-" + pad2_(dueDay);
 
     return {
       cardId: card.id,
       name: card.name,
       invoiceTotal: invoiceTotal,
-      dueDate: dueDate,
+      dueDate: period.dueDate,
     };
   });
 }
@@ -147,62 +129,45 @@ function computeUpcomingDue_(allTransactions, now, workspaceId) {
   });
 
   cards.forEach(function (card) {
-    var closingDay = Number(card.closingDay);
     var dueDay = Number(card.dueDay);
-    var todayYear = Number(todayStr.slice(0, 4));
-    var todayMonth = Number(todayStr.slice(5, 7));
 
-    var thisMonthClosing = buildDateString_(todayYear, todayMonth, closingDay);
+    var curDue = getCurrentInvoiceDueMonth_(dueDay, todayStr);
+    var curPeriod = getInvoicePeriodForDueMonth_(dueDay, curDue.year, curDue.month);
 
-    var currentClosingYear = todayYear;
-    var currentClosingMonth = todayMonth;
-    if (todayStr < thisMonthClosing) {
-      var prev = shiftMonth_(todayYear, todayMonth, -1);
-      currentClosingYear = prev.year;
-      currentClosingMonth = prev.month;
-    }
+    var nextDue = shiftMonth_(curDue.year, curDue.month, 1);
+    var nextPeriod = getInvoicePeriodForDueMonth_(dueDay, nextDue.year, nextDue.month);
 
     // Fatura Atual
-    var currentClosingDate = buildDateString_(currentClosingYear, currentClosingMonth, closingDay);
-    var prevOfCurrent = shiftMonth_(currentClosingYear, currentClosingMonth, -1);
-    var currentPeriodStart = addDays_(buildDateString_(prevOfCurrent.year, prevOfCurrent.month, closingDay), 1);
-    var currentDueDate = dueDateForClosing_(currentClosingYear, currentClosingMonth, closingDay, dueDay);
-
-    if (currentDueDate >= todayStr && currentDueDate <= futureStr) {
+    if (curPeriod.dueDate >= todayStr && curPeriod.dueDate <= futureStr) {
       var currentTransactions = cardTransactions.filter(function (tx) {
-        return tx.cardId === card.id && String(tx.date) >= currentPeriodStart && String(tx.date) <= currentClosingDate;
+        return tx.cardId === card.id && String(tx.date) >= curPeriod.start && String(tx.date) <= curPeriod.end;
       });
       var currentTotal = sumAmountList_(currentTransactions);
       if (currentTotal > 0) {
         upcomingTransactions.push({
-          id: "invoice-curr-" + card.id + "-" + currentDueDate,
+          id: "invoice-curr-" + card.id + "-" + curPeriod.dueDate,
           type: "expense",
           description: "Fatura - " + card.name,
           amount: currentTotal,
-          date: currentDueDate,
+          date: curPeriod.dueDate,
           paymentMethod: "credit",
         });
       }
     }
 
     // Próxima Fatura
-    var nextClosingMonth = shiftMonth_(currentClosingYear, currentClosingMonth, 1);
-    var nextClosingDate = buildDateString_(nextClosingMonth.year, nextClosingMonth.month, closingDay);
-    var nextPeriodStart = addDays_(currentClosingDate, 1);
-    var nextDueDate = dueDateForClosing_(nextClosingMonth.year, nextClosingMonth.month, closingDay, dueDay);
-
-    if (nextDueDate >= todayStr && nextDueDate <= futureStr) {
+    if (nextPeriod.dueDate >= todayStr && nextPeriod.dueDate <= futureStr) {
       var nextTransactions = cardTransactions.filter(function (tx) {
-        return tx.cardId === card.id && String(tx.date) >= nextPeriodStart && String(tx.date) <= nextClosingDate;
+        return tx.cardId === card.id && String(tx.date) >= nextPeriod.start && String(tx.date) <= nextPeriod.end;
       });
       var nextTotal = sumAmountList_(nextTransactions);
       if (nextTotal > 0) {
         upcomingTransactions.push({
-          id: "invoice-next-" + card.id + "-" + nextDueDate,
+          id: "invoice-next-" + card.id + "-" + nextPeriod.dueDate,
           type: "expense",
           description: "Fatura - " + card.name,
           amount: nextTotal,
-          date: nextDueDate,
+          date: nextPeriod.dueDate,
           paymentMethod: "credit",
         });
       }

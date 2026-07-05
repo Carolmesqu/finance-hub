@@ -163,31 +163,14 @@ function handleCardGetSummary(request, user) {
   }
   var card = found.record;
 
-  var closingDay = Number(card.closingDay);
   var dueDay = Number(card.dueDay);
   var todayStr = todayDateOnly_();
-  var todayYear = Number(todayStr.slice(0, 4));
-  var todayMonth = Number(todayStr.slice(5, 7));
 
-  var thisMonthClosing = buildDateString_(todayYear, todayMonth, closingDay);
+  var curDue = getCurrentInvoiceDueMonth_(dueDay, todayStr);
+  var curPeriod = getInvoicePeriodForDueMonth_(dueDay, curDue.year, curDue.month);
 
-  var currentClosingYear = todayYear;
-  var currentClosingMonth = todayMonth;
-  if (todayStr < thisMonthClosing) {
-    var prev = shiftMonth_(todayYear, todayMonth, -1);
-    currentClosingYear = prev.year;
-    currentClosingMonth = prev.month;
-  }
-
-  var currentClosingDate = buildDateString_(currentClosingYear, currentClosingMonth, closingDay);
-  var prevOfCurrent = shiftMonth_(currentClosingYear, currentClosingMonth, -1);
-  var currentPeriodStart = addDays_(buildDateString_(prevOfCurrent.year, prevOfCurrent.month, closingDay), 1);
-  var currentDueDate = dueDateForClosing_(currentClosingYear, currentClosingMonth, closingDay, dueDay);
-
-  var nextClosingMonth = shiftMonth_(currentClosingYear, currentClosingMonth, 1);
-  var nextClosingDate = buildDateString_(nextClosingMonth.year, nextClosingMonth.month, closingDay);
-  var nextPeriodStart = addDays_(currentClosingDate, 1);
-  var nextDueDate = dueDateForClosing_(nextClosingMonth.year, nextClosingMonth.month, closingDay, dueDay);
+  var nextDue = shiftMonth_(curDue.year, curDue.month, 1);
+  var nextPeriod = getInvoicePeriodForDueMonth_(dueDay, nextDue.year, nextDue.month);
 
   var cardTransactions = findRecords_(SHEET_NAMES.TRANSACTIONS, function (tx) {
     return (
@@ -199,17 +182,17 @@ function handleCardGetSummary(request, user) {
   });
 
   var currentInvoiceTransactions = cardTransactions.filter(function (tx) {
-    return String(tx.date) >= currentPeriodStart && String(tx.date) <= currentClosingDate;
+    return String(tx.date) >= curPeriod.start && String(tx.date) <= curPeriod.end;
   });
   var nextInvoiceTransactions = cardTransactions.filter(function (tx) {
-    return String(tx.date) >= nextPeriodStart && String(tx.date) <= nextClosingDate;
+    return String(tx.date) >= nextPeriod.start && String(tx.date) <= nextPeriod.end;
   });
 
   // Limite usado = todas as compras já lançadas até o fim da fatura em
   // aberto (inclui parcelas futuras já geradas — docs/BUSINESS_RULES.md).
   var used = sumAmountList_(
     cardTransactions.filter(function (tx) {
-      return String(tx.date) <= nextClosingDate;
+      return String(tx.date) <= nextPeriod.end;
     })
   );
   var limit = Number(card.limit) || 0;
@@ -221,16 +204,16 @@ function handleCardGetSummary(request, user) {
     used: round2_(used),
     available: round2_(limit - used),
     currentInvoice: {
-      periodStart: currentPeriodStart,
-      periodEnd: currentClosingDate,
-      dueDate: currentDueDate,
+      periodStart: curPeriod.start,
+      periodEnd: curPeriod.end,
+      dueDate: curPeriod.dueDate,
       total: sumAmountList_(currentInvoiceTransactions),
       transactions: currentInvoiceTransactions.map(sanitizeTransaction_),
     },
     nextInvoice: {
-      periodStart: nextPeriodStart,
-      periodEnd: nextClosingDate,
-      dueDate: nextDueDate,
+      periodStart: nextPeriod.start,
+      periodEnd: nextPeriod.end,
+      dueDate: nextPeriod.dueDate,
       total: sumAmountList_(nextInvoiceTransactions),
       transactions: nextInvoiceTransactions.map(sanitizeTransaction_),
     },
